@@ -27,11 +27,12 @@ export async function POST(req: Request) {
     const tools = createTools(enabledTools)
     const prompt = convertToModelMessages(messages)
 
-    console.log(`[${requestId}] 🤖 Calling AI model: openai/gpt-5-mini`)
+    const model = process.env.AI_GATEWAY_MODEL || "openai/gpt-5-mini"
+    console.log(`[${requestId}] 🤖 Calling AI model: ${model}`)
     console.log(`  - Available tools: ${Object.keys(tools).length}`)
 
     const result = streamText({
-      model: "openai/gpt-5-mini",
+      model,
       system: `You are a helpful AI assistant.
 You have access to the following tools: ${enabledTools.join(", ")}.
 Use these tools when appropriate to respond to the user's requests.
