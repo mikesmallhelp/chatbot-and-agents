@@ -1,4 +1,4 @@
-import { tool } from "ai"
+import { tool, type Tool as AITool } from "ai"
 import { z } from "zod"
 
 // Tool configuration
@@ -58,7 +58,7 @@ export const defaultTools: Tool[] = [
 
 // Tool definitions for each tool
 export function createTools(enabledTools: string[]) {
-  const allTools: Record<string, ReturnType<typeof tool>> = {
+  const allTools: Record<string, AITool> = {
     weather: tool({
       description: "Fetch weather information based on location. Use when the user asks about weather.",
       inputSchema: z.object({
@@ -199,7 +199,7 @@ export function createTools(enabledTools: string[]) {
   }
 
   // Return only enabled tools
-  const enabledToolsMap: Record<string, ReturnType<typeof tool>> = {}
+  const enabledToolsMap: Record<string, AITool> = {}
   for (const toolId of enabledTools) {
     if (allTools[toolId]) {
       enabledToolsMap[toolId] = allTools[toolId]

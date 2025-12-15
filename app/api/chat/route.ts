@@ -17,7 +17,12 @@ export async function POST(req: Request) {
     console.log(`[${requestId}] 📥 Incoming request:`)
     console.log(`  - Messages count: ${messages.length}`)
     console.log(`  - Enabled tools: [${enabledTools.join(", ")}]`)
-    console.log(`  - Last message: ${messages[messages.length - 1]?.parts?.[0]?.type === "text" ? messages[messages.length - 1].parts[0].text.substring(0, 100) : "N/A"}`)
+    const lastMessage = messages[messages.length - 1]
+    const lastPart = lastMessage?.parts?.[0]
+    const lastMessageText = lastPart && 'type' in lastPart && lastPart.type === "text" && 'text' in lastPart
+      ? lastPart.text.substring(0, 100)
+      : "N/A"
+    console.log(`  - Last message: ${lastMessageText}`)
 
     const tools = createTools(enabledTools)
     const prompt = convertToModelMessages(messages)
@@ -46,7 +51,9 @@ Be friendly and clear in your responses.`,
           console.log(`  - Tool calls: ${toolCalls.length}`)
           toolCalls.forEach((call, index) => {
             console.log(`    ${index + 1}. Tool: ${call.toolName}`)
-            console.log(`       Args:`, call.args)
+            // Handle both typed and dynamic tool calls
+            const args = 'args' in call ? call.args : 'input' in call ? call.input : undefined
+            console.log(`       Args:`, args)
           })
         }
 
@@ -54,7 +61,9 @@ Be friendly and clear in your responses.`,
           console.log(`  - Tool results: ${toolResults.length}`)
           toolResults.forEach((result, index) => {
             console.log(`    ${index + 1}. Tool: ${result.toolName}`)
-            console.log(`       Result:`, result.result)
+            // Handle both typed and dynamic tool results
+            const output = 'result' in result ? result.result : 'output' in result ? result.output : undefined
+            console.log(`       Result:`, output)
           })
         }
 
