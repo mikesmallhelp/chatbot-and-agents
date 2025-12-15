@@ -26,10 +26,10 @@ export function ChatInterface() {
       api: "/api/chat",
       body: { enabledServers },
     }),
-    onFinish: (message) => {
+    onFinish: ({ message }) => {
       console.log("[CLIENT] ✅ Message received:", {
         role: message.role,
-        partsCount: message.parts.length,
+        contentLength: message.parts.length,
       })
     },
     onError: (error) => {
