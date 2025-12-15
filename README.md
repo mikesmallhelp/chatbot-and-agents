@@ -1,30 +1,29 @@
-# MCP server chatbot
+# AI Chatbot with Configurable Tools
 
-*Automatically synced with your [v0.app](https://v0.app) deployments*
+![UI Screenshot 1](doc/ui1.png)
 
-[![Deployed on Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/mikas-projects-4c461bdb/v0-mcp-server-chatbot)
-[![Built with v0](https://img.shields.io/badge/Built%20with-v0.app-black?style=for-the-badge)](https://v0.app/chat/sz2yDDuhFd2)
+![UI Screenshot 2](doc/ui2.png)
 
-## Overview
+A configurable AI chatbot application where you can enable and disable tools using the Vercel AI SDK agent pattern.
 
-This repository will stay in sync with your deployed chats on [v0.app](https://v0.app).
-Any changes you make to your deployed app will be automatically pushed to this repository from [v0.app](https://v0.app).
+Learn more: [How to Build AI Agents with Vercel and the AI SDK](https://vercel.com/kb/guide/how-to-build-ai-agents-with-vercel-and-the-ai-sdk)
 
-## Deployment
+## Setup
 
-Your project is live at:
+Create a `.env.local` file in the project root with the following environment variables:
 
-**[https://vercel.com/mikas-projects-4c461bdb/v0-mcp-server-chatbot](https://vercel.com/mikas-projects-4c461bdb/v0-mcp-server-chatbot)**
+```env
+AI_GATEWAY_API_KEY=your-api-key-here
+AI_GATEWAY_MODEL=openai/gpt-5-mini
+```
 
-## Build your app
+## Getting Started
 
-Continue building your app on:
+Install dependencies and run the development server:
 
-**[https://v0.app/chat/sz2yDDuhFd2](https://v0.app/chat/sz2yDDuhFd2)**
+```bash
+npm i
+npm run dev
+```
 
-## How It Works
-
-1. Create and modify your project using [v0.app](https://v0.app)
-2. Deploy your chats from the v0 interface
-3. Changes are automatically pushed to this repository
-4. Vercel deploys the latest version from this repository
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
