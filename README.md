@@ -4,7 +4,7 @@
 
 ![UI Screenshot 2](doc/ui2.png)
 
-A configurable AI chatbot application where you can enable and disable tools using the Vercel AI SDK agent pattern.
+A configurable AI chatbot application where you can enable and disable simulated tools using the Vercel AI SDK agent pattern.
 
 Learn more: [How to Build AI Agents with Vercel and the AI SDK](https://vercel.com/kb/guide/how-to-build-ai-agents-with-vercel-and-the-ai-sdk)
 
