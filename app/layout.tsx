@@ -8,8 +8,8 @@ const geist = Geist({ subsets: ["latin"], variable: "--font-geist" })
 const geistMono = Geist_Mono({ subsets: ["latin"], variable: "--font-geist-mono" })
 
 export const metadata: Metadata = {
-  title: "MCP Chatbot - Configurable AI Assistant",
-  description: "A generic chatbot where you can configure your desired MCP servers",
+  title: "AI Chatbot - Configurable AI Assistant",
+  description: "A generic chatbot where you can configure your desired tools",
   generator: "v0.app",
 }
 

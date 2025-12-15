@@ -1,5 +1,5 @@
 import { convertToModelMessages, streamText, type UIMessage, stepCountIs, consumeStream } from "ai"
-import { createMCPTools } from "@/lib/mcp-config"
+import { createTools } from "@/lib/tool-config"
 
 export const maxDuration = 60
 
@@ -12,14 +12,14 @@ export async function POST(req: Request) {
   console.log("=".repeat(80))
 
   try {
-    const { messages, enabledServers }: { messages: UIMessage[]; enabledServers: string[] } = await req.json()
+    const { messages, enabledTools }: { messages: UIMessage[]; enabledTools: string[] } = await req.json()
 
     console.log(`[${requestId}] 📥 Incoming request:`)
     console.log(`  - Messages count: ${messages.length}`)
-    console.log(`  - Enabled servers: [${enabledServers.join(", ")}]`)
+    console.log(`  - Enabled tools: [${enabledTools.join(", ")}]`)
     console.log(`  - Last message: ${messages[messages.length - 1]?.parts?.[0]?.type === "text" ? messages[messages.length - 1].parts[0].text.substring(0, 100) : "N/A"}`)
 
-    const tools = createMCPTools(enabledServers)
+    const tools = createTools(enabledTools)
     const prompt = convertToModelMessages(messages)
 
     console.log(`[${requestId}] 🤖 Calling AI model: openai/gpt-5-mini`)
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
     const result = streamText({
       model: "openai/gpt-5-mini",
       system: `You are a helpful AI assistant.
-You have access to the following MCP servers/tools: ${enabledServers.join(", ")}.
+You have access to the following tools: ${enabledTools.join(", ")}.
 Use these tools when appropriate to respond to the user's requests.
 Be friendly and clear in your responses.`,
       messages: prompt,

@@ -1,8 +1,8 @@
 import { tool } from "ai"
 import { z } from "zod"
 
-// MCP Server configuration
-export interface MCPServer {
+// Tool configuration
+export interface Tool {
   id: string
   name: string
   description: string
@@ -10,8 +10,8 @@ export interface MCPServer {
   enabled: boolean
 }
 
-// Default servers - users can modify these
-export const defaultMCPServers: MCPServer[] = [
+// Default tools - users can modify these
+export const defaultTools: Tool[] = [
   {
     id: "weather",
     name: "Weather",
@@ -56,8 +56,8 @@ export const defaultMCPServers: MCPServer[] = [
   },
 ]
 
-// Tool definitions for each MCP server
-export function createMCPTools(enabledServers: string[]) {
+// Tool definitions for each tool
+export function createTools(enabledTools: string[]) {
   const allTools: Record<string, ReturnType<typeof tool>> = {
     weather: tool({
       description: "Fetch weather information based on location. Use when the user asks about weather.",
@@ -199,11 +199,11 @@ export function createMCPTools(enabledServers: string[]) {
   }
 
   // Return only enabled tools
-  const enabledTools: Record<string, ReturnType<typeof tool>> = {}
-  for (const serverId of enabledServers) {
-    if (allTools[serverId]) {
-      enabledTools[serverId] = allTools[serverId]
+  const enabledToolsMap: Record<string, ReturnType<typeof tool>> = {}
+  for (const toolId of enabledTools) {
+    if (allTools[toolId]) {
+      enabledToolsMap[toolId] = allTools[toolId]
     }
   }
-  return enabledTools
+  return enabledToolsMap
 }

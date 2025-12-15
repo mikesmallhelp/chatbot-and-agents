@@ -5,8 +5,8 @@ import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { type MCPServer, defaultMCPServers } from "@/lib/mcp-config"
-import { MCPServerList } from "./mcp-server-list"
+import { type Tool, defaultTools } from "@/lib/tool-config"
+import { ToolList } from "./tool-list"
 import { ChatMessage } from "./chat-message"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -14,17 +14,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Send, Trash2, Settings2, X, Sparkles } from "lucide-react"
 
 export function ChatInterface() {
-  const [servers, setServers] = useState<MCPServer[]>(defaultMCPServers)
+  const [tools, setTools] = useState<Tool[]>(defaultTools)
   const [showSettings, setShowSettings] = useState(false)
   const [inputValue, setInputValue] = useState("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
-  const enabledServers = servers.filter((s) => s.enabled).map((s) => s.id)
+  const enabledTools = tools.filter((s) => s.enabled).map((s) => s.id)
 
   const { messages, sendMessage, status, setMessages } = useChat({
     transport: new DefaultChatTransport({
       api: "/api/chat",
-      body: { enabledServers },
+      body: { enabledTools },
     }),
     onFinish: ({ message }) => {
       console.log("[CLIENT] ✅ Message received:", {
@@ -45,12 +45,12 @@ export function ChatInterface() {
     scrollToBottom()
   }, [messages])
 
-  const handleToggleServer = (id: string) => {
-    setServers((prev) => {
-      const updated = prev.map((server) => (server.id === id ? { ...server, enabled: !server.enabled } : server))
-      const toggledServer = updated.find((s) => s.id === id)
+  const handleToggleTool = (id: string) => {
+    setTools((prev) => {
+      const updated = prev.map((tool) => (tool.id === id ? { ...tool, enabled: !tool.enabled } : tool))
+      const toggledTool = updated.find((s) => s.id === id)
 
-      console.log(`[CLIENT] 🔌 Server toggled: ${toggledServer?.name} (${toggledServer?.enabled ? "ON" : "OFF"})`)
+      console.log(`[CLIENT] 🛠️ Tool toggled: ${toggledTool?.name} (${toggledTool?.enabled ? "ON" : "OFF"})`)
 
       return updated
     })
@@ -62,7 +62,7 @@ export function ChatInterface() {
 
     console.log("[CLIENT] 📤 Sending message:", {
       text: inputValue.substring(0, 100),
-      enabledServers,
+      enabledTools,
     })
 
     sendMessage({ text: inputValue })
@@ -73,7 +73,7 @@ export function ChatInterface() {
     setMessages([])
   }
 
-  const enabledServersList = servers.filter((s) => s.enabled)
+  const enabledToolsList = tools.filter((s) => s.enabled)
 
   return (
     <div className="flex h-screen flex-col bg-background">
@@ -84,8 +84,8 @@ export function ChatInterface() {
             <Sparkles className="size-5" />
           </div>
           <div>
-            <h1 className="font-semibold">MCP Chatbot</h1>
-            <p className="text-sm text-muted-foreground">{enabledServersList.length} servers enabled</p>
+            <h1 className="font-semibold">AI Chatbot</h1>
+            <p className="text-sm text-muted-foreground">{enabledToolsList.length} tools enabled</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -107,7 +107,7 @@ export function ChatInterface() {
         {/* Settings Panel */}
         {showSettings && (
           <aside className="w-80 shrink-0 overflow-y-auto border-r border-border/50 p-4">
-            <MCPServerList servers={servers} onToggle={handleToggleServer} />
+            <ToolList tools={tools} onToggle={handleToggleTool} />
           </aside>
         )}
 
@@ -125,24 +125,24 @@ export function ChatInterface() {
 
               <Card className="w-full max-w-md border-border/50">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-base">🔌 Enabled MCP Servers</CardTitle>
+                  <CardTitle className="text-base">🛠️ Enabled Tools</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {enabledServersList.length > 0 ? (
+                  {enabledToolsList.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
-                      {enabledServersList.map((server) => (
+                      {enabledToolsList.map((tool) => (
                         <div
-                          key={server.id}
+                          key={tool.id}
                           className="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1.5 text-sm"
                         >
-                          <span>{server.icon}</span>
-                          <span>{server.name}</span>
+                          <span>{tool.icon}</span>
+                          <span>{tool.name}</span>
                         </div>
                       ))}
                     </div>
                   ) : (
                     <p className="text-sm text-muted-foreground">
-                      No servers enabled. Activate servers from settings.
+                      No tools enabled. Activate tools from settings.
                     </p>
                   )}
                 </CardContent>
@@ -151,7 +151,7 @@ export function ChatInterface() {
               <div className="text-center text-sm text-muted-foreground">
                 <p>Try for example:</p>
                 <div className="mt-2 flex flex-wrap justify-center gap-2">
-                  {enabledServers.includes("weather") && (
+                  {enabledTools.includes("weather") && (
                     <button
                       onClick={() => setInputValue("What's the weather in Helsinki?")}
                       className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground transition-colors hover:bg-secondary/80"
@@ -159,7 +159,7 @@ export function ChatInterface() {
                       "What's the weather in Helsinki?"
                     </button>
                   )}
-                  {enabledServers.includes("calculator") && (
+                  {enabledTools.includes("calculator") && (
                     <button
                       onClick={() => setInputValue("Calculate 15 * 23 + 42")}
                       className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground transition-colors hover:bg-secondary/80"
@@ -167,7 +167,7 @@ export function ChatInterface() {
                       "Calculate 15 * 23 + 42"
                     </button>
                   )}
-                  {enabledServers.includes("datetime") && (
+                  {enabledTools.includes("datetime") && (
                     <button
                       onClick={() => setInputValue("What time is it now?")}
                       className="rounded-full bg-secondary px-3 py-1 text-secondary-foreground transition-colors hover:bg-secondary/80"
